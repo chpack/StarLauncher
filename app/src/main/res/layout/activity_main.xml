@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/lis"
+    tools:context="com.example.cheny.starlauncher.MainActivity">
+
+
+    <ImageView
+        android:id="@+id/touch_point"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginStart="432dp"
+        android:layout_marginTop="664dp"
+        android:alpha="0"
+        android:contentDescription="@string/description"
+        android:src="@drawable/tosdfgu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/app_list_fragment"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginStart="4280dp"
+        android:layout_marginTop="6640dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--tools:ignore="MissingConstraints"/>-->
+    <!--android:alpha="1"-->
+
+
+</android.support.constraint.ConstraintLayout>
