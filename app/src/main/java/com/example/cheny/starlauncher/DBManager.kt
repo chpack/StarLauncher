@@ -11,9 +11,13 @@ import android.database.sqlite.SQLiteDatabase
  */
 
 class DBManager(context: Context) {
-    public var db: SQLiteDatabase = OraginDB(context,"map.db", null, 1).writableDatabase
+    var db: SQLiteDatabase = OraginDB(context,"map.db", null, 1).writableDatabase
 
-    // Find the action which the gesture map to.
+
+    /**
+     * Find the action which the gesture map to.
+     *
+     */
     @SuppressLint("Recycle")
     fun search(gesture: String): List<String> {
         val columns = arrayOf("type", "action", "package", "name", "arguments")
@@ -31,11 +35,20 @@ class DBManager(context: Context) {
         return final.toList()
     }
 
+
+    /**
+     *  Delete the item by package name
+     */
     fun delete(pack: String){
         db.delete("map", "package = ?", arrayOf(pack))
     }
 
-    fun updata(gesture: String, pack: String, name: String, arguments: String): Boolean {
+
+    /**
+     *  Updata the item
+     *
+     */
+     fun updata(gesture: String, pack: String, name: String, arguments: String): Boolean {
         val item = ContentValues()
         return if (search(gesture)[0] == "") {
             delete(pack)

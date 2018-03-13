@@ -7,6 +7,56 @@
     android:id="@+id/lis"
     tools:context="com.example.cheny.starlauncher.MainActivity">
 
+    <ImageView
+        android:id="@+id/icon0"
+        android:src="@drawable/empty"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:alpha="0"
+        android:contentDescription="@string/the_no_0_area"/>
+
+    <ImageView
+        android:id="@+id/icon1"
+        android:src="@drawable/empty"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:alpha="0"
+        android:contentDescription="@string/the_no_1_area"/>
+    <ImageView
+        android:id="@+id/icon2"
+        android:src="@drawable/empty"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:alpha="0"
+        android:contentDescription="@string/the_no_2_area"/>
+    <ImageView
+        android:id="@+id/icon3"
+        android:src="@drawable/empty"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:alpha="0"
+        android:contentDescription="@string/the_no_3_area"/>
+    <ImageView
+        android:id="@+id/icon4"
+        android:src="@drawable/empty"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:alpha="0"
+        android:contentDescription="@string/the_no_4_area"/>
+    <ImageView
+        android:id="@+id/icon5"
+        android:src="@drawable/empty"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:alpha="0"
+        android:contentDescription="@string/the_no_5_area"/>
+    <ImageView
+        android:id="@+id/icon6"
+        android:src="@drawable/empty"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:alpha="0"
+        android:contentDescription="@string/the_no_6_area"/>
 
     <ImageView
         android:id="@+id/touch_point"
@@ -29,9 +79,6 @@
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <!--tools:ignore="MissingConstraints"/>-->
-    <!--android:alpha="1"-->
 
 
 </android.support.constraint.ConstraintLayout>
