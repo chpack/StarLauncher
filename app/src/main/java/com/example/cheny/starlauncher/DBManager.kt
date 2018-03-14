@@ -62,4 +62,17 @@ class DBManager(context: Context) {
             true
         }else false
     }
+
+
+    /**
+     * For some special usage.
+     */
+    @SuppressLint("Recycle")
+    fun scanGesture(name: String): String {
+        val result = db.query("map", arrayOf("gesture"), "name = ?", arrayOf(name), null, null, null)
+        return if (result.count != 0) {
+            result.moveToFirst()
+            result.getString(0)
+        } else ""
+    }
 }

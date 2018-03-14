@@ -63,7 +63,9 @@ class AppListFragment : Fragment() {
         mApps = packageManager.queryIntentActivities(mainIntent,0)
 //        app_list_view.adapter = ownadapt(mApps,this.activity,packageManager, db.db)
 //        app_list_view.adapter = ownadapt(mApps,context,packageManager, db.db)
-        app_list_view.adapter = ownadapt(mApps,context, packageManager, db.db)
+//        app_list_view.adapter = ownadapt(mApps,context, packageManager, db.db)
+        app_list_view.adapter = AppListAdapter(mApps,context, packageManager, db)
+//        app_list_view.adapter = ownadapt(mApps,cont, packageManager, db.db)
 //        when (command) {
 //            "start" -> app_list_view.setOnItemClickListener { parent, view, position, id ->
 //                closeFunction()

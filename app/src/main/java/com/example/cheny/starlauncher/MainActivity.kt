@@ -87,14 +87,10 @@ class MainActivity : Activity() {
             closeFragmentAnim()
         }
         touchStart = Pot(x,y)
-        appList.loadAppList()
+//        appList.loadAppList()
         replaceIcons(x, y)
         changeIcons()
         onTouchAnim(0)
-
-//        val iconPoses = floatArrayOf(-50f, -50f, -150f, -100f, -50f, -150f, 50f, -100f, 50f, 0f, -50f, 50f, -150f, 0f)
-//        val iconPoses = floatArrayOf(-0.5f, -0.5f, -2.2f, -1.0f, -0.5f, -1.5f, 1.2f, -1f, 1.2f, 0f, -0.5f, 0.5f, -2.2f, 0f )
-
     }
 
 
@@ -114,13 +110,7 @@ class MainActivity : Activity() {
             changeIcons()
             onTouchAnim(nowArea)
         }
-
-        val toa = Toast.makeText(this, touchList.toString(), Toast.LENGTH_SHORT)
-        toa.show()
-
     }
-
-    var tim = 0.toLong()
 
 
     /**
@@ -186,6 +176,7 @@ class MainActivity : Activity() {
      * The animators on the fragment.
      */
     private fun openFragmentAnim() {
+        appList.loadAppList()
         fragmentStatus = "on"
         app_list_fragment.x = touchStart.x - app_list_fragment.width / 2
         app_list_fragment.y = touchStart.y - app_list_fragment.height / 2

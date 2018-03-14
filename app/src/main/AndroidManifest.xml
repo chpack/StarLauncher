@@ -21,8 +21,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".setlauncher" />
-        <activity android:name=".Setting" />
+        <!--<activity android:name=".setlauncher" />-->
+        <!--<activity android:name=".Setting" />-->
     </application>
 
 </manifest>

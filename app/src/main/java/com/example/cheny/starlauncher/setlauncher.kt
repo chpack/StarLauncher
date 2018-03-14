@@ -20,7 +20,7 @@ class setlauncher : AppCompatActivity() {
 
         loadApp()
 
-        lv.adapter = ownadapt(mApps,this,packageManager, db)
+//        lv.adapter = ownadapt(mApps,this,packageManager, db)
 
 
         // On touch event

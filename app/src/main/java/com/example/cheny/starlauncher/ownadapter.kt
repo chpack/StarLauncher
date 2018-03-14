@@ -13,12 +13,15 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+//import com.example.cheny.starlauncher.R.id.*
+
+//import com.example.cheny.starlauncher.R.id.*
 
 /**
  * Created by cheny on 17.12.27.
  * To adapt the app list
  */
-class ownadapt(private var apps: List<ResolveInfo>, context : Context, pM : PackageManager, private var db: SQLiteDatabase) : BaseAdapter() {
+class Ownadapt(private var apps: List<ResolveInfo>, context : Context, pM : PackageManager, private var db: SQLiteDatabase) : BaseAdapter() {
     private var mContext : Context = context
     private var pm : PackageManager = pM
 
@@ -33,6 +36,7 @@ class ownadapt(private var apps: List<ResolveInfo>, context : Context, pM : Pack
         val icon = convertView.findViewById<ImageView>(R.id.app_icon)
         val title = convertView.findViewById<TextView>(R.id.app_title)
         val gesture = convertView.findViewById<TextView>(R.id.app_gesture)
+
 
         var a = apps[position].activityInfo.loadIcon(pm)
 
