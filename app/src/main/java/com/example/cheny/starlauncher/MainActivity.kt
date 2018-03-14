@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.widget.ImageView
 import android.widget.Toast
@@ -13,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
 class MainActivity : Activity() {
 
-    private var touchStart: Pot = Pot(540.0,960.0)
+    private var touchStart: Pot = Pot()
     private var touchList = mutableListOf<Int>()
     private var lastArea = 1
     private var nowArea : Int = 0
@@ -22,6 +23,7 @@ class MainActivity : Activity() {
     private var appList = AppListFragment()
     private var status = "normal"
     private lateinit var icons : List<ImageView>
+    private var iconsPos = Array(7,init = { Pot()})
 
     @SuppressLint("Recycle")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,24 +81,20 @@ class MainActivity : Activity() {
     private fun startTouch(x: Float, y: Float) {
         touchList.clear()
         lastArea = 0
+        nowArea = 0
 
         if (fragmentStatus == "on") {
             closeFragmentAnim()
         }
-        onTouchAnim(x,y)
-        touchStart = Pot(x.toDouble(),y.toDouble())
+        touchStart = Pot(x,y)
         appList.loadAppList()
+        replaceIcons(x, y)
         changeIcons()
+        onTouchAnim(0)
 
 //        val iconPoses = floatArrayOf(-50f, -50f, -150f, -100f, -50f, -150f, 50f, -100f, 50f, 0f, -50f, 50f, -150f, 0f)
 //        val iconPoses = floatArrayOf(-0.5f, -0.5f, -2.2f, -1.0f, -0.5f, -1.5f, 1.2f, -1f, 1.2f, 0f, -0.5f, 0.5f, -2.2f, 0f )
 
-        val iconPoses = floatArrayOf(0f, 0f, -1.7f, -1f, 0f, -2f, 1.7f, -1f, 1.7f, 1f, 0f, 2f, -1.7f, 1f)
-        for (i: Int in 0..6) {
-            icons[i].alpha = 1.0f
-            icons[i].x = x + iconPoses[i *2] * icons[i].width/1.5f - icons[i].width/2
-            icons[i].y = y + iconPoses[i *2 + 1] * icons[i].width/1.5f - icons[i].width/2
-        }
     }
 
 
@@ -107,13 +105,14 @@ class MainActivity : Activity() {
      * 3. create a toast to show touch list.(it's for debug, may delete this future)
      */
     private fun changeTouch(x: Float, y: Float) {
-        val now = Pot (x.toDouble(), y.toDouble())
+        val now = Pot (x, y)
         nowArea = touchStart.inWhichArea(now)
 
         if (nowArea != lastArea && nowArea != 7) {
             lastArea = nowArea
             touchList.add(nowArea)
             changeIcons()
+            onTouchAnim(nowArea)
         }
 
         val toa = Toast.makeText(this, touchList.toString(), Toast.LENGTH_SHORT)
@@ -188,8 +187,8 @@ class MainActivity : Activity() {
      */
     private fun openFragmentAnim() {
         fragmentStatus = "on"
-        app_list_fragment.x = touch_point.x
-        app_list_fragment.y = touch_point.y
+        app_list_fragment.x = touchStart.x - app_list_fragment.width / 2
+        app_list_fragment.y = touchStart.y - app_list_fragment.height / 2
 //        val ani0 = ObjectAnimator.ofInt(app_list_fragment,"width",0,touch_point.width*2)
         val ani0 = ObjectAnimator.ofFloat(app_list_fragment,"scaleX",0f, 1f)
         val ani1 = ObjectAnimator.ofFloat(app_list_fragment,"scaleY",0f, 1f)
@@ -241,11 +240,15 @@ class MainActivity : Activity() {
      * Animators when it start to show.
      * The animator when user start the screen
      */
-    private fun onTouchAnim(x:Float, y:Float) {
-        touch_point.x = x - touch_point.width/2
-        touch_point.y = y - touch_point.height/2
-        touchStart = Pot(x.toDouble(), x.toDouble())
-        val ani = ObjectAnimator.ofFloat(touch_point, "alpha", 0f,1f)
+    private fun onTouchAnim(s: Int) {
+        val ani = AnimatorSet()
+
+        for (i: Int in 0..6){
+//            icons[i].alpha = 1.0f
+            ani.playTogether(ObjectAnimator.ofFloat(icons[i], "alpha", 0f, 1f))
+            ani.playTogether(ObjectAnimator.ofFloat(icons[i], "x", iconsPos[s].x, iconsPos[i].x))
+            ani.playTogether(ObjectAnimator.ofFloat(icons[i], "y", iconsPos[s].y, iconsPos[i].y))
+        }
         ani.duration = 200
         ani.start()
     }
@@ -254,7 +257,10 @@ class MainActivity : Activity() {
      * The animator when user stop touch the screen
      */
     private fun outTouchAnim() {
-        val ani = ObjectAnimator.ofFloat(touch_point, "alpha", 1f,0f)
+        val ani = AnimatorSet()
+        for (i: Int in 0..6){
+            ani.playTogether(ObjectAnimator.ofFloat(icons[i], "alpha", 1f, 0f))
+        }
         ani.duration = 200
         ani.start()
     }
@@ -264,22 +270,41 @@ class MainActivity : Activity() {
      * Change the icon on every area.
      */
     private fun changeIcons() {
+        Log.d("asdf", "${nowArea},    ${lastArea}")
         for (i: Int in 0..6) {
-            val instruce = data.search((touchList + i).toString())
-            if (instruce[2] != "") {
-                icons[i].setImageDrawable(packageManager.getApplicationIcon(instruce[2]))
+
+            val instruce =  if (i != nowArea) {
+                data.search((touchList + i).toString())
             } else {
-//                icons[i].setImageDrawable(Drawable.createFromPath)
-                icons[i].setImageResource(R.drawable.empty)
+                data.search((touchList).toString())
+            }
+
+            when (instruce[0]) {
+                "app" -> icons[i].setImageDrawable(packageManager.getApplicationIcon(instruce[2]))
+
+                "launcher" -> when (instruce[1]) {
+                    "list" -> icons[i].setImageResource(R.drawable.list)
+                    "setting" -> icons[i].setImageResource(R.drawable.setting)
+                }
+
+                else -> {       // Usual means it is empty.
+                    icons[i].setImageResource(R.drawable.empty)
+                }
             }
         }
-        val instruce = data.search((touchList).toString())
-        if (instruce[2] != "" && nowArea != 7) {
-            icons[nowArea].setImageDrawable(packageManager.getApplicationIcon(instruce[2]))
-        } else {
-//            icons[if (nowArea == 7) lastArea else nowArea].setImageDrawable(null)
-            icons[if (nowArea == 7) lastArea else nowArea].setImageResource(R.drawable.empty)
+    }
+
+
+    /**
+     * Replace the icons to the right position.
+     */
+    private fun replaceIcons(x: Float, y: Float) {
+        val iconPoses = floatArrayOf(0f, 0f, -1.7f, -1f, 0f, -2f, 1.7f, -1f, 1.7f, 1f, 0f, 2f, -1.7f, 1f)
+        for (i: Int in 0..6) {
+            iconsPos[i].x = x + iconPoses[i *2] * icons[i].width/1.5f - icons[i].width/2
+            iconsPos[i].y = y + iconPoses[i *2 + 1] * icons[i].width/1.5f - icons[i].width/2
         }
+
     }
 }
 
