@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.widget.ImageView
 import android.widget.Toast
@@ -42,6 +41,7 @@ class MainActivity : Activity() {
         appList.closeFunction = {closeFragmentAnim()}
         appList.startApp =  { packagename, name -> startApp(packagename, name) }
         appList.beforeSetApp = {beforeSetApp()}
+
         tra.replace(app_list_fragment.id,appList)
         tra.commit()
         app_list_fragment.x = -1000f
@@ -212,16 +212,9 @@ class MainActivity : Activity() {
      * Open a setting Fragment
      */
     private fun startSettingFragment(command: String) {
-        openFragmentAnim()
-    }
-
-
-    /**
-     * I forget why i create this....
-     * May be one day I will remember it.
-     */
-    private fun listApps() {
-
+        when (command) {
+            "list" -> openFragmentAnim()
+        }
     }
 
 
@@ -261,7 +254,6 @@ class MainActivity : Activity() {
      * Change the icon on every area.
      */
     private fun changeIcons() {
-        Log.d("asdf", "${nowArea},    ${lastArea}")
         for (i: Int in 0..6) {
 
             val instruce =  if (i != nowArea) {
