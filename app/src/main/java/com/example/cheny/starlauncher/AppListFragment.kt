@@ -4,7 +4,9 @@ import android.app.Fragment
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
+import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +36,7 @@ class AppListFragment : Fragment() {
     /**
      * Load the app list.
      */
+    @RequiresApi(Build.VERSION_CODES.M)
     fun loadAppList() {
         val mainIntent = Intent(Intent.ACTION_MAIN)
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER)

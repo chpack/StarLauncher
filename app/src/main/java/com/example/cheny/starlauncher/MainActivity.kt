@@ -4,7 +4,9 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.view.MotionEvent
 import android.widget.ImageView
 import android.widget.Toast
@@ -52,6 +54,7 @@ class MainActivity : Activity() {
     /**
      * Deal with the touch event.
      */
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         when (event?.action) {
             MotionEvent.ACTION_DOWN -> startTouch(event.x, event.y)
@@ -118,6 +121,7 @@ class MainActivity : Activity() {
      * 1. play the animator
      * 2. start apps or other activity.
      */
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun endTouch() {
         outTouchAnim()
         val instruce = data.search(touchList.toString())
@@ -158,6 +162,7 @@ class MainActivity : Activity() {
     /**
      * Start set app's gesture.
      */
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun setApp(gesture: String) {
 //        return data.updata(gesture, appList.catchPackage, appList.catchName, "")
         if (data.updata(gesture, appList.catchPackage, appList.catchName, "")) {
@@ -175,6 +180,7 @@ class MainActivity : Activity() {
     /**
      * The animators on the fragment.
      */
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun openFragmentAnim() {
         appList.loadAppList()
         fragmentStatus = "on"
@@ -211,6 +217,7 @@ class MainActivity : Activity() {
     /**
      * Open a setting Fragment
      */
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun startSettingFragment(command: String) {
         when (command) {
             "list" -> openFragmentAnim()
