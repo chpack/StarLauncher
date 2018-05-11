@@ -4,14 +4,19 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.support.annotation.DrawableRes
 import android.support.annotation.RequiresApi
+import android.support.constraint.ConstraintLayout
+import android.util.Log
 import android.view.MotionEvent
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
-
+/*
 @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
 class MainActivity : Activity() {
 
@@ -111,7 +116,7 @@ class MainActivity : Activity() {
             lastArea = nowArea
             touchList.add(nowArea)
             changeIcons()
-            onTouchAnim(nowArea)
+            //onTouchAnim(nowArea)
         }
     }
 
@@ -298,3 +303,30 @@ class MainActivity : Activity() {
     }
 }
 
+*/
+@Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+class MainActivity : Activity() {
+    private lateinit var data: DBManager
+    private lateinit var panel: Panel
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        data = DBManager(this)
+
+        panelContainer = panel_container
+//        panelContainer!!.layoutParams = ViewGroup.LayoutParams(panelSize, panelSize)
+        panelContainer!!.layoutParams = ConstraintLayout.LayoutParams(panelSize, panelSize)
+        cont = this
+//        b = Panel(listOf(0), resources.getDrawable(R.drawable.empty))
+        panel = Panel(listOf(0), resources.getDrawable((R.drawable.empty)))
+
+    }
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        when (event?.action) {
+//            MotionEvent.ACTION_DOWN -> startTouch(event.x, event.y)
+            MotionEvent.ACTION_DOWN -> panel.open()
+            MotionEvent.ACTION_UP -> panel.close()
+        }
+        return true
+    }
+}
