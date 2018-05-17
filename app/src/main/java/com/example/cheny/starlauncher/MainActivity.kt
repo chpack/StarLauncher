@@ -2,20 +2,15 @@ package com.example.cheny.starlauncher
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.DrawableRes
 import android.support.annotation.RequiresApi
 import android.support.constraint.ConstraintLayout
 import android.util.Log
 import android.view.MotionEvent
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+
 /*
 @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
 class MainActivity : Activity() {
@@ -308,25 +303,136 @@ class MainActivity : Activity() {
 class MainActivity : Activity() {
     private lateinit var data: DBManager
     private lateinit var panel: Panel
+    private lateinit var activePanel: Panel
+    private lateinit var startPot: Pot
+    private var touchOrder = mutableListOf<Int>()
+    private var areaStatus = 0
+    private var fragmentStatus = "none"
+    private var appList = AppListFragment()
+    private var status = "normal"
+
+    private fun startApp(packagename: String, name: String) {
+//            val target = Intent(Intent.ACTION_MAIN)
+//            target.component = ComponentName(packagename, name)
+//            startActivity(target)
+        val tar = packageManager.getLaunchIntentForPackage(packagename)
+        startActivity(tar)
+    }
+
+    /**
+     * Some thing should be done before setting.
+     * Should be fixed future.
+     */
+    private fun beforeSetApp() {
+        status = "setting"
+        closeFragmentAnim()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         data = DBManager(this)
 
-        panelContainer = panel_container
-//        panelContainer!!.layoutParams = ViewGroup.LayoutParams(panelSize, panelSize)
-        panelContainer!!.layoutParams = ConstraintLayout.LayoutParams(panelSize, panelSize)
-        cont = this
-//        b = Panel(listOf(0), resources.getDrawable(R.drawable.empty))
-        panel = Panel(listOf(0), resources.getDrawable((R.drawable.empty)))
+        // Create the fragment of app list
+        val tra = fragmentManager.beginTransaction()
+        appList.db = data
+        appList.packageManager = packageManager
+        appList.closeFunction = {closeFragmentAnim()}
+        appList.startApp =  { packagename, name -> startApp(packagename, name) }
+        appList.beforeSetApp = {beforeSetApp()}
+
+        tra.replace(app_list_fragment.id,appList)
+        tra.commit()
+        app_list_fragment.x = -1000f
+
+        initPanel(200, 300, 800, this, panel_container, resources.getDrawable(R.drawable.empty))
+        panel = Panel(listOf(0), "empty")
+
+        activePanel = panel
 
     }
+
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         when (event?.action) {
 //            MotionEvent.ACTION_DOWN -> startTouch(event.x, event.y)
-            MotionEvent.ACTION_DOWN -> panel.open()
-            MotionEvent.ACTION_UP -> panel.close()
+            MotionEvent.ACTION_DOWN -> startTouch(event)
+            MotionEvent.ACTION_MOVE -> switchPanel(event)
+            MotionEvent.ACTION_UP -> stopTouch(event)
         }
         return true
+    }
+
+    /**
+     *  Move the panel to the right place
+     */
+    fun startTouch(event: MotionEvent?) {
+        touchOrder = mutableListOf(0)
+        if (fragmentStatus == "on") {
+            closeFragmentAnim()
+        }
+        if (event != null) {
+            startPot = Pot(event)
+            panelContainer!!.x = event.x - panelSize / 2
+            panelContainer!!.y = event.y - panelSize / 2
+
+            activePanel.open()
+        }
+    }
+
+
+    fun switchPanel(event: MotionEvent?) {
+        if (event != null) {
+            areaStatus = startPot.inWhichArea(Pot(event))
+
+            if (areaStatus != touchOrder.last() && areaStatus != 7) {
+                touchOrder.add(areaStatus)
+
+                activePanel.close()
+                activePanel = activePanel[areaStatus]
+                activePanel.open()
+            }
+
+
+        }
+    }
+
+    fun stopTouch(event: MotionEvent?) {
+        activePanel.close()
+        activePanel = panel
+    }
+
+    /**
+     * The animators on the fragment.
+     */
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun openFragmentAnim() {
+        appList.loadAppList()
+        fragmentStatus = "on"
+        app_list_fragment.x = startPot.x - app_list_fragment.width / 2
+        app_list_fragment.y = startPot.y - app_list_fragment.height / 2
+//        val ani0 = ObjectAnimator.ofInt(app_list_fragment,"width",0,touch_point.width*2)
+        val ani0 = ObjectAnimator.ofFloat(app_list_fragment,"scaleX",0f, 1f)
+        val ani1 = ObjectAnimator.ofFloat(app_list_fragment,"scaleY",0f, 1f)
+        ani0.duration = 200
+        ani1.duration = 200
+        val ans = AnimatorSet()
+        ans.playTogether(ani0, ani1)
+        ans.start()
+    }
+
+    private fun closeFragmentAnim() {
+        fragmentStatus = "off"
+        val ani0 = ObjectAnimator.ofFloat(app_list_fragment,"scaleX",1f, 0f)
+        val ani1 = ObjectAnimator.ofFloat(app_list_fragment,"scaleY",1f, 0f)
+        val ani2 = ObjectAnimator.ofFloat(app_list_fragment,"x",1f, -1000f)
+        ani0.duration = 200
+        ani1.duration = 200
+        ani2.duration = 1
+        val ans = AnimatorSet()
+        ans.play(ani0).with(ani1).before(ani2)
+        ans.start()
+//        ans.playTogether(ani0, ani1).
+//        AnimatorSet().play(ani2).after(ani0)
+//        ans.start()
+
     }
 }

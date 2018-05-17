@@ -3,6 +3,7 @@ package com.example.cheny.starlauncher
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 
 /**
@@ -20,17 +21,15 @@ class DBManager(context: Context) {
      */
     @SuppressLint("Recycle")
     fun search(gesture: String): List<String> {
-        val columns = arrayOf("type", "action", "package", "name", "arguments")
+        val columns = arrayOf("type", "pkg", "name")
         val result = db.query("map", columns, "gesture = ?", arrayOf(gesture), null, null, null)
         val final = if (result.count != 0) {
             result.moveToFirst()
             arrayOf(result.getString(0),// type
-                    result.getString(1),// action
-                    result.getString(2),/// package
-                    result.getString(3),// name
-                    result.getString(4))// arguments
+                    result.getString(1),/// package
+                    result.getString(2))// name
         } else {
-            arrayOf("","","","","")
+            arrayOf("","","")
         }
         return final.toList()
     }
@@ -39,8 +38,8 @@ class DBManager(context: Context) {
     /**
      *  Delete the item by package name
      */
-    fun delete(pack: String){
-        db.delete("map", "package = ?", arrayOf(pack))
+    fun delete(pkg: String){
+        db.delete("map", "pkg = ?", arrayOf(pkg))
     }
 
 
@@ -54,10 +53,8 @@ class DBManager(context: Context) {
             delete(pack)
             item.put("gesture", gesture)
             item.put("type", "app")
-            item.put("action", "start")
-            item.put("package", pack)
+            item.put("pkg", pack)
             item.put("name", name)
-            item.put("arguments", arguments)
             db.insert("map", null, item)
             true
         }else false
@@ -74,5 +71,13 @@ class DBManager(context: Context) {
             result.moveToFirst()
             result.getString(0)
         } else ""
+    }
+
+
+    /**
+     * Return all items to init panels.
+     */
+    fun all():Cursor {
+        return db.query("map", arrayOf("gesture", "pkg"), "1=1", null, null, null, null)
     }
 }
