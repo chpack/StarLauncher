@@ -1,11 +1,16 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Wallpaper.NoTitleBar">
+    <!--<style name="AppTheme" parent="android:Theme.Wallpaper">-->
+    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowNoTitle">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">#00ffffff</item>
     </style>
 
-    <style name="BWtheme" parent="android:Theme.Wallpaper.NoTitleBar" />
+    <!--<style name="BWtheme" parent="android:Theme.Wallpaper.NoTitleBar" />-->
 
 </resources>

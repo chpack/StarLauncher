@@ -3,13 +3,19 @@ package com.example.cheny.starlauncher
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.support.annotation.DrawableRes
 import android.support.annotation.RequiresApi
 import android.support.constraint.ConstraintLayout
 import android.util.Log
 import android.view.MotionEvent
+import android.view.View
+import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.FileInputStream
 
 /*
 @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -329,7 +335,14 @@ class MainActivity : Activity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         setContentView(R.layout.activity_main)
+
+        if(Build.VERSION.SDK_INT >= 21)
+        {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        }
         data = DBManager(this)
 
         // Create the fragment of app list
@@ -348,6 +361,15 @@ class MainActivity : Activity() {
         panel = Panel(listOf(0), "empty")
 
         activePanel = panel
+        var args = data.all()
+        args.moveToFirst()
+        while (args.moveToNext()) {
+//            var da = FileInputStream(args.getString(3) + ".jpg")
+            var d = Drawable.createFromPath(filesDir.toString() + args.getString(3) + ".jpg")
+            var list = args.getString(0)
+//            panel.add(Array(list.length/3, {i -> }))
+//            panel.add
+        }
 
     }
 
