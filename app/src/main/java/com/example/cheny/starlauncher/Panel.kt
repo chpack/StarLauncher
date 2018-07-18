@@ -25,12 +25,12 @@ var panelContainer : ConstraintLayout? = null
 var empty: Drawable? = null
 
 
-private var postions = Array(7, {i ->
-    if (i == 0)
-        Pot() - iconSize / 2 + panelSize / 2
-    else
-        Pot(Math.cos(Math.toRadians(i * 60.0 + 150)), Math.sin(Math.toRadians(i * 60.0 + 150))) * radius - iconSize/2 + panelSize/2
-})
+//private var postions = Array(7, {i ->
+//    if (i == 0)
+//        Pot() - iconSize / 2 + panelSize / 2
+//    else
+//        Pot(Math.cos(Math.toRadians(i * 60.0 + 150)), Math.sin(Math.toRadians(i * 60.0 + 150))) * radius - iconSize/2 + panelSize/2
+//})
 
 /**
  * Init the panels
@@ -141,6 +141,14 @@ class Panel(var index: Int, imageRes: String = ""){
         closeAni.start()
     }
 
+    public fun getChild(index: List<Int>): Panel {
+        return when {
+            index.size == 0 -> this
+            index.size == 1 -> this[index[0]]
+            else -> children[index[0]]!!.getChild(index.drop(0))
+        }
+    }
+
     operator fun get(index: Int): Panel {
         if (!children[index]!!.full)
             children[index] = Panel(listOf(index), "empty")
@@ -148,11 +156,13 @@ class Panel(var index: Int, imageRes: String = ""){
 
     }
 
+
     private fun loadImage(imageRes: String): Drawable? {
         return when(imageRes) {
             "empty" -> empty
             else -> empty
         }
     }
+
 
 }

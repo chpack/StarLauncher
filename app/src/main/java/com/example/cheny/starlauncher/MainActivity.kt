@@ -16,6 +16,7 @@ import android.view.View
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.FileInputStream
+import kotlin.concurrent.thread
 
 /*
 @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
@@ -325,6 +326,22 @@ class MainActivity : Activity() {
         startActivity(tar)
     }
 
+    private fun loadPanel() {
+        thread(start = true) {
+//            panel =
+//        var args = data.all()
+//        args.moveToFirst()
+//        while (args.moveToNext()) {
+////            var da = FileInputStream(args.getString(3) + ".jpg")
+//            var d = Drawable.createFromPath(filesDir.toString() + args.getString(3) + ".jpg")
+//            var list = args.getString(0)
+////            panel.add(Array(list.length/3, {i -> }))
+////            panel.add
+//        }
+
+        }
+    }
+
     /**
      * Some thing should be done before setting.
      * Should be fixed future.
@@ -334,18 +351,20 @@ class MainActivity : Activity() {
         closeFragmentAnim()
     }
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        // Load main views.
         super.onCreate(savedInstanceState)
-
-
         setContentView(R.layout.activity_main)
 
-        if(Build.VERSION.SDK_INT >= 21)
-        {
+        // Let navigation bar and status bar transparent.
+        if(Build.VERSION.SDK_INT >= 21) {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         }
-        data = DBManager(this)
 
-        // Create the fragment of app list
+        // Load launcher data.
+        data = DBManager(this, resources,"launch.db")
+
+        // Create the fragment of app list.
         val tra = fragmentManager.beginTransaction()
         appList.db = data
         appList.packageManager = packageManager
@@ -370,7 +389,6 @@ class MainActivity : Activity() {
 //            panel.add(Array(list.length/3, {i -> }))
 //            panel.add
         }
-
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
