@@ -19,6 +19,7 @@ class MainActivity : Activity() {
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
+        Tools.t(this)
         return true
     }
 
