@@ -11,4 +11,5 @@
     <string name="the_no_4_area">The NO.4 area will be selected,</string>
     <string name="the_no_5_area">The NO.5 area will be selected,</string>
     <string name="the_no_6_area">The NO.6 area will be selected,</string>
+    <string name="title_activity_app_list">AppList</string>
 </resources>

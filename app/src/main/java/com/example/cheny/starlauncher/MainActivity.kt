@@ -1,6 +1,7 @@
 package com.example.cheny.starlauncher
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.MotionEvent
@@ -18,9 +19,21 @@ class MainActivity : Activity() {
 
     }
 
+    /**
+     * Start app list activity
+     */
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        Tools.t(this)
+        if (event?.action == MotionEvent.ACTION_UP){
+            startActivity(Intent(this, AppList::class.java))
+        }
         return true
+    }
+
+    /**
+     * Do nothing when back button pressed
+     */
+    override fun onBackPressed() {
+//        super.onBackPressed()
     }
 
 }
