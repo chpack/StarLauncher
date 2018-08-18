@@ -11,12 +11,16 @@ import kotlinx.android.synthetic.main.activity_main.*
 @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
 class MainActivity : Activity() {
     private lateinit var root: Panel
+    private lateinit var current: Panel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         root = Panel(this, operation_area)
         operation_area.addView(root)
+        current = root
+
         if (Build.VERSION.SDK_INT >= 21) {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         }
@@ -26,15 +30,17 @@ class MainActivity : Activity() {
      * Start app list activity
      */
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-//        if (event?.action == MotionEvent.ACTION_UP){
-////            startActivity(Intent(this, AppList::class.java))
-//        }
         when (event?.action) {
+            MotionEvent.ACTION_DOWN -> {
+                root.setPos(Point(event))
+                root.unfold(Point(event))
+            }
+            MotionEvent.ACTION_MOVE -> {
+                current = current.turn(Point(event))
+            }
             MotionEvent.ACTION_UP -> {
-                root.setPosition(Point(event))
-                root.expane(Point(event))
-//                root.x = event.x
-//                root.y = event.y
+                current.fold()
+                current = root
             }
         }
 
