@@ -30,6 +30,9 @@ class Panel(context: Context, var operatorArea: ViewGroup) : ImageView(context) 
         super.setImageDrawable(drawable)
     }
 
+    /**
+     * unfold panel,include show icons animation
+     */
     fun unfold(pos: Point) {
         alpha = 1F
         for (i in 0 until PanelAttrs.num) {
@@ -39,7 +42,7 @@ class Panel(context: Context, var operatorArea: ViewGroup) : ImageView(context) 
     }
 
     /**
-     * fold back the panels
+     * fold back the panels expect naxt panel
      */
     fun fold(next: Int) {
         for (i in 0 until PanelAttrs.num) {
@@ -49,9 +52,10 @@ class Panel(context: Context, var operatorArea: ViewGroup) : ImageView(context) 
         this.alpha = 0F
     }
 
-    fun fold() {
-        fold(-1)
-    }
+    /**
+     * fold back everything
+     */
+    fun fold() { fold(-1) }
 
     /**
      * Turn to next Panel.
